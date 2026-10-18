@@ -70,13 +70,13 @@ public class AccountTest {
     }
 
     @Test
-    void test_credit_with_same_currency() {
+    void test_credit_with_different_currency() {
         Account account = newAccount();
         assertThrows(IncompatibleCurrencies.class, () -> account.credit(moneyRub("5.0")));
     }
 
     @Test
-    void test_debit_with_same_currency() {
+    void test_debit_with_different_currency() {
         Account account = newAccount();
         account.credit(moneyUsd("10.0"));
         assertThrows(IncompatibleCurrencies.class, () -> account.debit(moneyRub("5.0")));
