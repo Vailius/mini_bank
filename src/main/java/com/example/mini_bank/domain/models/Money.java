@@ -28,6 +28,10 @@ public record Money(BigDecimal amount, Currency currency) {
         return new Money(amount.subtract(other.amount()), currency);
     }
 
+    public boolean isZero() {
+        return amount.compareTo(BigDecimal.ZERO) == 0;
+    }
+
     public boolean isNegative() {
         return amount.compareTo(BigDecimal.ZERO) < 0;
     }
