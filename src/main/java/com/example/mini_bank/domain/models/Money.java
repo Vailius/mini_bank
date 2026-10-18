@@ -32,6 +32,10 @@ public record Money(BigDecimal amount, Currency currency) {
         return amount.compareTo(BigDecimal.ZERO) < 0;
     }
 
+    public boolean isLessThan(Money other) {
+        return amount.compareTo(other.amount()) < 0;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
