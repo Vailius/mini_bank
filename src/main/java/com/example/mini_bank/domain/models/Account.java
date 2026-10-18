@@ -58,7 +58,7 @@ public class Account {
             throw new IllegalArgumentException("Amount for credit cannot be null");
         }
         if (amount.isNegative()) {
-            throw new IllegalArgumentException("amount to credint cannot be negative value");
+            throw new IllegalArgumentException("amount to credit cannot be negative value");
         }
         balance = balance.add(amount);
     }
