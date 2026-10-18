@@ -50,6 +50,9 @@ public class Account {
         if (balance.isLessThan(amount)) {
             throw new InsufficientFunds(balance, amount);
         }
+        if (amount.isNegative()) {
+            throw new IllegalArgumentException("Amount cannot be negative for debit");
+        }
         balance = balance.subtract(amount);
     }
 
