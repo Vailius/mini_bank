@@ -1,7 +1,7 @@
 package com.example.mini_bank.domain.models;
 import com.example.mini_bank.domain.exceptions.InsufficientFunds;
 import java.util.UUID;
-import java.util.Instant;
+import java.time.Instant;
 import java.util.Currency;
 import java.math.BigDecimal;
 
@@ -20,7 +20,7 @@ public class Account {
         id = UUID.randomUUID();
         createdAt = Instant.now();
         number = "ACC-" + UUID.randomUUID().toString().substring(0, 8);
-        balance = new Money(new BigDecimal("0.0", currency));
+        balance = new Money(new BigDecimal("0.0"), currency);
     }
 
     public UUID id() {
