@@ -1,0 +1,47 @@
+package com.example.mini_bank.domain.models;
+import com.example.mini_bank.domain.exceptions.IncompatibleCurrencies;
+
+import java.math.BigDecimal;
+import java.util.Currency;
+import java.util.Objects;
+
+public record Money(BigDecimal amount, Currency currency) {
+
+    public Money {
+        if (amount == null) {
+            throw new IllegalArgumentException("Money: amount cannot be null");
+        }
+        if (currency == null) {
+            throw new IllegalArgumentException("Money: currency cannot be null");
+        }
+    }
+
+    public Money add(Money other) {
+        if (other == null) throw new IllegalArgumentException("Money: cannot add null-value");
+        IncompatibleCurrencies.throwIfIncompatible(currency, other.currency());
+        return new Money(amount.add(other.amount()), currency);
+    }
+
+    public Money subtract(Money other) {
+        if (other == null) throw new IllegalArgumentException("Money: cannot subtract null-value");
+        IncompatibleCurrencies.throwIfIncompatible(currency, other.currency());
+        return new Money(amount.subtract(other.amount()), currency);
+    }
+
+    public boolean isNegative() {
+        return amount.compareTo(BigDecimal.ZERO) < 0;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Money other)) return false;
+        return currency.equals(other.currency)
+                && amount.compareTo(other.amount) == 0;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(currency, amount.stripTrailingZeros());
+    }
+}
