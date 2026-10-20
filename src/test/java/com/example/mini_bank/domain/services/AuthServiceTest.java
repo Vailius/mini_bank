@@ -3,8 +3,9 @@ import com.example.mini_bank.domain.services.AuthService;
 import com.example.mini_bank.domain.PasswordEncoderMock;
 import com.example.mini_bank.domain.repositories.InMemoryUserRepository;
 import com.example.mini_bank.domain.exceptions.EmailAlreadyRegistered;
-import com.example.mini_bank.domain.exceptions.NonExistentUserWithEmail;
+import com.example.mini_bank.domain.exceptions.NonExistentUser;
 import com.example.mini_bank.domain.models.User;
+
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -36,12 +37,12 @@ public class AuthServiceTest {
 
     @Test
     void test_non_existent_user() {
-        assertThrows(NonExistentUserWithEmail.class, () -> authService.login("petrov228@mail.ru", "bandit16-2022"));
+        assertThrows(NonExistentUser.class, () -> authService.login("petrov228@mail.ru", "bandit16-2022"));
     }
 
     @Test
     void test_not_true_password() {
-        assertThrows(NonExistentUserWithEmail.class, () -> authService.login(testMail, "aura+++"));
+        assertThrows(NonExistentUser.class, () -> authService.login(testMail, "aura+++"));
     }
 
     @Test
