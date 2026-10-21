@@ -1,9 +1,9 @@
 package com.example.mini_bank.domain.models;
-import com.example.mini_bank.domain.exceptions.IncompatibleCurrencies;
-
 import java.math.BigDecimal;
 import java.util.Currency;
 import java.util.Objects;
+
+import com.example.mini_bank.domain.exceptions.IncompatibleCurrencies;
 
 public record Money(BigDecimal amount, Currency currency) {
 
@@ -14,6 +14,10 @@ public record Money(BigDecimal amount, Currency currency) {
         if (currency == null) {
             throw new IllegalArgumentException("Money: currency cannot be null");
         }
+    }
+
+    public static Money copy(Money m) {
+        return new Money(m.amount(), m.currency());
     }
 
     public Money add(Money other) {
