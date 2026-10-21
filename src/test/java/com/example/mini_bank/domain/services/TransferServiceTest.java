@@ -78,6 +78,27 @@ public class TransferServiceTest {
     }
 
     @Test
+    test_transfer_same_account() {
+        assertThrows(SameAccountTransfer.class, () -> 
+            service.transfer(UUID.randomUUID(), petrovAccount.userId(),
+                petrovAccount.id(), petrovAccount.id(),
+                new Money(new BigDecimal("10.0"), currencyRub)
+            )
+        );
+    }
+
+    @Test
+    void test_transfer_overbalance() {
+        assertThrows(InsufficientFunds.class, () ->
+            service.transfer(
+                UUID.randomUUID(), petrovAccount.userId(),
+                petrovAccount.id(), sidorovAccount.id(),
+                new Money(new BigDecimal("10000.0"), currencyRub)
+            )
+        );
+    }
+
+    @Test
     void test_transfer_repeat_request() {
         Transaction transaction = service.transfer(UUID.randomUUID(), sidorovAccount.userId(),
             sidorovAccount.id(), petrovAccount.id(),
