@@ -1,14 +1,15 @@
 package com.example.mini_bank.domain.models;
 
-import com.example.mini_bank.domain.exceptions.InsufficientFunds;
-import com.example.mini_bank.domain.exceptions.IncompatibleCurrencies;
-
-import static org.junit.jupiter.api.Assertions.*;
-import org.junit.jupiter.api.Test;
-
+import java.math.BigDecimal;
 import java.util.Currency;
 import java.util.UUID;
-import java.math.BigDecimal;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.jupiter.api.Test;
+
+import com.example.mini_bank.domain.exceptions.IncompatibleCurrencies;
+import com.example.mini_bank.domain.exceptions.InsufficientFunds;
 
 public class AccountTest {
 
@@ -33,7 +34,8 @@ public class AccountTest {
     
     @Test
     void test_create_with_null_currency() {
-        assertThrows(IllegalArgumentException.class, () -> new Account(id, null));
+        Currency cur = null;
+        assertThrows(IllegalArgumentException.class, () -> new Account(id, cur));
     }
 
     @Test
