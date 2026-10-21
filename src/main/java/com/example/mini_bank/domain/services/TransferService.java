@@ -1,8 +1,10 @@
 package com.example.mini_bank.domain.services;
 import java.util.UUID;
+import java.util.Optional;
 
 import com.example.mini_bank.domain.exceptions.AccessDenied;
 import com.example.mini_bank.domain.exceptions.NonExistentAccount;
+import com.example.mini_bank.domain.exceptions.SameAccountTransfer;
 import com.example.mini_bank.domain.models.Account;
 import com.example.mini_bank.domain.models.Money;
 import com.example.mini_bank.domain.models.Transaction;
@@ -29,6 +31,9 @@ public class TransferService {
 
     public Transaction transfer(UUID requestId, UUID currentUser, UUID accountSender, UUID accountRecivier, Money amount) {
         Account sender, recivier;
+        if (accountSender.equals(accountRecivier)) {
+            throw new SameAccountTransfer(accountSender);
+        }
         if (accountSender.compareTo(accountRecivier) > 0) {
             sender = loadAccount(accountSender);
             recivier = loadAccount(accountRecivier);
@@ -39,6 +44,11 @@ public class TransferService {
 
         if (!sender.userId().equals(currentUser)) {
             AccessDenied.throwAccessToSomeone(accountSender);
+        }
+
+        Optional<Transaction> existing = transactionRepository.findByRequestId(requestId);
+        if (existing.isPresent()) {
+            return existing.get();
         }
 
         sender.debit(amount);
