@@ -16,6 +16,8 @@ import com.example.mini_bank.domain.repositories.InMemoryAccountRepository;
 import com.example.mini_bank.domain.repositories.InMemoryTransactionRepository;
 import com.example.mini_bank.domain.exceptions.AccessDenied;
 import com.example.mini_bank.domain.exceptions.IncompatibleCurrencies;
+import com.example.mini_bank.domain.exceptions.SameAccountTransfer;
+import com.example.mini_bank.domain.exceptions.InsufficientFunds;
 public class TransferServiceTest {
     private TransferService service;
     private InMemoryAccountRepository accounts;
@@ -78,7 +80,7 @@ public class TransferServiceTest {
     }
 
     @Test
-    test_transfer_same_account() {
+    void test_transfer_same_account() {
         assertThrows(SameAccountTransfer.class, () -> 
             service.transfer(UUID.randomUUID(), petrovAccount.userId(),
                 petrovAccount.id(), petrovAccount.id(),
