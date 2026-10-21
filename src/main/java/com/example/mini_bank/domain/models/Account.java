@@ -1,9 +1,10 @@
 package com.example.mini_bank.domain.models;
-import com.example.mini_bank.domain.exceptions.InsufficientFunds;
-import java.util.UUID;
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.Currency;
-import java.math.BigDecimal;
+import java.util.UUID;
+
+import com.example.mini_bank.domain.exceptions.InsufficientFunds;
 
 public class Account {
     private final UUID id;
@@ -12,6 +13,10 @@ public class Account {
     private final String number;
     private Money balance;
 
+    private static String randomNumber() {
+        return "ACC-"+UUID.randomUUID().toString().substring(0,8);
+    }
+
     public Account(UUID userId, Currency currency) {
         if (userId == null) {
             throw new IllegalArgumentException("userId cannot be null");
@@ -19,8 +24,27 @@ public class Account {
         this.userId = userId;
         id = UUID.randomUUID();
         createdAt = Instant.now();
-        number = "ACC-" + UUID.randomUUID().toString().substring(0, 8);
+        number = randomNumber();
         balance = new Money(new BigDecimal("0.0"), currency);
+    }
+
+    public Account(UUID userId, Money balance) {
+        this.userId = userId;
+        this.id = UUID.randomUUID();
+        this.createdAt = Instant.now();
+        this.number = randomNumber();
+        this.balance = Money.copy(balance);
+    }
+
+    public Account(Account other) {
+        if (other == null) {
+            throw new IllegalArgumentException("account for copy cannot be null");
+        }
+        userId = other.userId();
+        id = other.id();
+        createdAt = other.createdAt();
+        number = other.number();
+        balance = other.balance();
     }
 
     public UUID id() {
