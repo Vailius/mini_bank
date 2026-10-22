@@ -5,19 +5,20 @@ import java.util.Currency;
 import java.util.Optional;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import com.example.mini_bank.domain.exceptions.AccessDenied;
+import com.example.mini_bank.domain.exceptions.IncompatibleCurrencies;
+import com.example.mini_bank.domain.exceptions.InsufficientFunds;
+import com.example.mini_bank.domain.exceptions.SameAccountTransfer;
 import com.example.mini_bank.domain.models.Account;
 import com.example.mini_bank.domain.models.Money;
 import com.example.mini_bank.domain.models.Transaction;
 import com.example.mini_bank.domain.repositories.InMemoryAccountRepository;
 import com.example.mini_bank.domain.repositories.InMemoryTransactionRepository;
-import com.example.mini_bank.domain.exceptions.AccessDenied;
-import com.example.mini_bank.domain.exceptions.IncompatibleCurrencies;
-import com.example.mini_bank.domain.exceptions.SameAccountTransfer;
-import com.example.mini_bank.domain.exceptions.InsufficientFunds;
 public class TransferServiceTest {
     private TransferService service;
     private InMemoryAccountRepository accounts;
@@ -40,6 +41,25 @@ public class TransferServiceTest {
         service = new TransferService(
             accounts, transactions
         );
+    }
+
+    @Test
+    void test_create_null() {
+        assertThrows(IllegalArgumentException.class, () -> new TransferService(null, null));
+        assertThrows(IllegalArgumentException.class, () -> new TransferService(null, transactions));
+        assertThrows(IllegalArgumentException.class, () -> new TransferService(accounts, null));
+    }
+
+    @Test
+    void test_transfer_null() {
+        UUID tuid = UUID.randomUUID();
+        Money amount = new Money(new BigDecimal("100.0"), Currency.getInstance("RUB"));
+        assertThrows(IllegalArgumentException.class, () -> service.transfer(null, null, null, null, null));
+        assertThrows(IllegalArgumentException.class, () -> service.transfer(null, tuid, tuid, tuid, amount));
+        assertThrows(IllegalArgumentException.class, () -> service.transfer(tuid, null, tuid, tuid, amount));
+        assertThrows(IllegalArgumentException.class, () -> service.transfer(tuid, tuid, null, tuid, amount));
+        assertThrows(IllegalArgumentException.class, () -> service.transfer(tuid, tuid, tuid, null, amount));
+        assertThrows(IllegalArgumentException.class, () -> service.transfer(tuid, tuid, tuid, tuid, null));
     }
 
     static void checkAccounts(Optional<Account> a, Optional<Account> b) {
