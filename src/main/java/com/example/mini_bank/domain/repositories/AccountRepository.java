@@ -12,4 +12,5 @@ public interface AccountRepository {
     Optional<Account> findByIdForUpdate(UUID id);
     Optional<Account> findById(UUID id);
     Page<Account> findByUserId(UUID userId);
+    Account delete(Account account);
 }
