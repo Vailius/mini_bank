@@ -1,6 +1,8 @@
 package com.example.mini_bank.domain.models;
-import java.util.UUID;
 import java.time.Instant;
+import java.util.UUID;
+
+import com.example.mini_bank.domain.exceptions.NullHelper;
 
 public class User {
     private final UUID id;
@@ -9,6 +11,9 @@ public class User {
     private final String password;
 
     public User(String email, String password) {
+        NullHelper.throwIfNull(email, "email");
+        NullHelper.throwIfNull(password, "password");
+        
         id = UUID.randomUUID();
         createdAt = Instant.now();
 
