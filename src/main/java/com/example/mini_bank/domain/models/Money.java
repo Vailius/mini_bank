@@ -4,30 +4,28 @@ import java.util.Currency;
 import java.util.Objects;
 
 import com.example.mini_bank.domain.exceptions.IncompatibleCurrencies;
+import com.example.mini_bank.domain.exceptions.NullHelper;
 
 public record Money(BigDecimal amount, Currency currency) {
 
     public Money {
-        if (amount == null) {
-            throw new IllegalArgumentException("Money: amount cannot be null");
-        }
-        if (currency == null) {
-            throw new IllegalArgumentException("Money: currency cannot be null");
-        }
+        NullHelper.throwIfNull(amount, "amount");
+        NullHelper.throwIfNull(currency, "currency");
     }
 
     public static Money copy(Money m) {
+        NullHelper.throwIfNull(m, "m");
         return new Money(m.amount(), m.currency());
     }
 
     public Money add(Money other) {
-        if (other == null) throw new IllegalArgumentException("Money: cannot add null-value");
+        NullHelper.throwIfNull(other, "other");
         IncompatibleCurrencies.throwIfIncompatible(currency, other.currency());
         return new Money(amount.add(other.amount()), currency);
     }
 
     public Money subtract(Money other) {
-        if (other == null) throw new IllegalArgumentException("Money: cannot subtract null-value");
+        NullHelper.throwIfNull(other, "other");
         IncompatibleCurrencies.throwIfIncompatible(currency, other.currency());
         return new Money(amount.subtract(other.amount()), currency);
     }
