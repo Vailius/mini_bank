@@ -5,6 +5,7 @@ import java.util.Currency;
 import java.util.UUID;
 
 import com.example.mini_bank.domain.exceptions.InsufficientFunds;
+import com.example.mini_bank.domain.exceptions.NullHelper;
 
 public class Account {
     private final UUID id;
@@ -18,9 +19,8 @@ public class Account {
     }
 
     public Account(UUID userId, Currency currency) {
-        if (userId == null) {
-            throw new IllegalArgumentException("userId cannot be null");
-        }
+        NullHelper.throwIfNull(userId, "userId");
+        NullHelper.throwIfNull(currency, "currency");
         this.userId = userId;
         id = UUID.randomUUID();
         createdAt = Instant.now();
@@ -29,6 +29,8 @@ public class Account {
     }
 
     public Account(UUID userId, Money balance) {
+        NullHelper.throwIfNull(userId, "userId");
+        NullHelper.throwIfNull(balance, "balance");
         this.userId = userId;
         this.id = UUID.randomUUID();
         this.createdAt = Instant.now();
@@ -37,9 +39,7 @@ public class Account {
     }
 
     public Account(Account other) {
-        if (other == null) {
-            throw new IllegalArgumentException("account for copy cannot be null");
-        }
+        NullHelper.throwIfNull(other, "other");
         userId = other.userId();
         id = other.id();
         createdAt = other.createdAt();
@@ -68,9 +68,7 @@ public class Account {
     }
 
     public void debit(Money amount) {
-        if (amount == null) {
-            throw new IllegalArgumentException("Amount for debit cannot be null");
-        }
+        NullHelper.throwIfNull(amount, "amount");
         if (balance.isLessThan(amount)) {
             throw new InsufficientFunds(balance, amount);
         }
@@ -81,9 +79,7 @@ public class Account {
     }
 
     public void credit(Money amount) {
-        if (amount == null) {
-            throw new IllegalArgumentException("Amount for credit cannot be null");
-        }
+        NullHelper.throwIfNull(amount, "amount");
         if (amount.isNegative()) {
             throw new IllegalArgumentException("amount to credit cannot be negative value");
         }
