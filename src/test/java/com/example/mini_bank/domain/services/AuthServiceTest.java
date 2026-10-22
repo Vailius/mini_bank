@@ -1,14 +1,14 @@
-package com.example.mini_bank.domain.repositories;
-import com.example.mini_bank.domain.services.AuthService;
+package com.example.mini_bank.domain.services;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
 import com.example.mini_bank.domain.PasswordEncoderMock;
-import com.example.mini_bank.domain.repositories.InMemoryUserRepository;
 import com.example.mini_bank.domain.exceptions.EmailAlreadyRegistered;
 import com.example.mini_bank.domain.exceptions.NonExistentUser;
 import com.example.mini_bank.domain.models.User;
-
-import static org.junit.jupiter.api.Assertions.*;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import com.example.mini_bank.domain.repositories.InMemoryUserRepository;
 
 public class AuthServiceTest {
 
@@ -23,6 +23,28 @@ public class AuthServiceTest {
         authService = new AuthService(new InMemoryUserRepository(), passwordEncoder);
         authService.register(testMail, testPassword);
         passwordEncoder.clear();
+    }
+
+    @Test
+    void test_create_with_null() {
+        InMemoryUserRepository urepo = new InMemoryUserRepository();
+        assertThrows(IllegalArgumentException.class, () -> new AuthService(null, null));
+        assertThrows(IllegalArgumentException.class, () -> new AuthService(urepo, null));
+        assertThrows(IllegalArgumentException.class, () -> new AuthService(null, passwordEncoder));
+    }
+
+    @Test
+    void test_login_null() {
+        assertThrows(IllegalArgumentException.class, () -> authService.login(null, null));
+        assertThrows(IllegalArgumentException.class, () -> authService.login(null, "some-password"));
+        assertThrows(IllegalArgumentException.class, () -> authService.login("sobaka@mail.col", null));
+    }
+
+    @Test
+    void test_register_null() {
+        assertThrows(IllegalArgumentException.class, () -> authService.register(null, null));
+        assertThrows(IllegalArgumentException.class, () -> authService.register(null, "some-password"));
+        assertThrows(IllegalArgumentException.class, () -> authService.register("sobaka@mail.com", null));
     }
 
     @Test
