@@ -1,9 +1,10 @@
 package com.example.mini_bank.domain.services;
-import java.util.UUID;
 import java.util.Optional;
+import java.util.UUID;
 
 import com.example.mini_bank.domain.exceptions.AccessDenied;
 import com.example.mini_bank.domain.exceptions.NonExistentAccount;
+import com.example.mini_bank.domain.exceptions.NullHelper;
 import com.example.mini_bank.domain.exceptions.SameAccountTransfer;
 import com.example.mini_bank.domain.models.Account;
 import com.example.mini_bank.domain.models.Money;
@@ -17,6 +18,9 @@ public class TransferService {
     private final TransactionRepository transactionRepository;
 
     public TransferService(AccountRepository accountRepository, TransactionRepository transactionRepository) {
+        NullHelper.throwIfNull(accountRepository, "accountRepository");
+        NullHelper.throwIfNull(transactionRepository, "transactionRepository");
+
         this.accountRepository = accountRepository;
         this.transactionRepository = transactionRepository;
     }
@@ -30,6 +34,12 @@ public class TransferService {
     }
 
     public Transaction transfer(UUID requestId, UUID currentUser, UUID accountSender, UUID accountRecivier, Money amount) {
+        NullHelper.throwIfNull(requestId, "requestId");
+        NullHelper.throwIfNull(currentUser, "currentUser");
+        NullHelper.throwIfNull(accountSender, "accountSender");
+        NullHelper.throwIfNull(accountRecivier, "accountRecivier");
+        NullHelper.throwIfNull(amount, "amount");
+        
         Account sender, recivier;
         if (accountSender.equals(accountRecivier)) {
             throw new SameAccountTransfer(accountSender);
