@@ -1,6 +1,8 @@
 package com.example.mini_bank.domain.models;
 import java.util.UUID;
 
+import com.example.mini_bank.domain.exceptions.NullHelper;
+
 public class Transaction {
     private final UUID requestId;
     private final UUID id;
@@ -11,6 +13,12 @@ public class Transaction {
     private final Money amount;
 
     public Transaction(UUID requestId, UUID sender, UUID recivier, UUID senderAccount, UUID recivierAccount, Money amount) {
+        NullHelper.throwIfNull(requestId, "requestId");
+        NullHelper.throwIfNull(sender, "sender");
+        NullHelper.throwIfNull(recivier, "recivier");
+        NullHelper.throwIfNull(senderAccount, "senderAccount");
+        NullHelper.throwIfNull(recivierAccount, "recivierAccount");
+        NullHelper.throwIfNull(amount, "amount");
         this.requestId = requestId;
         this.id = UUID.randomUUID();
         this.recivier = recivier;
@@ -45,6 +53,6 @@ public class Transaction {
     }
 
     public Money amount() {
-        return new Money(amount.amount(), amount.currency());
+        return Money.copy(amount);
     }
 }
