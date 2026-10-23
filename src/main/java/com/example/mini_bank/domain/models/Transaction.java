@@ -3,14 +3,19 @@ import java.util.UUID;
 
 import com.example.mini_bank.domain.exceptions.NullHelper;
 
+import jakarta.persistence.Embeddable;
+import jakarta.persistence.Embedded;
+
+@Embeddable
 public class Transaction {
-    private final UUID requestId;
-    private final UUID id;
-    private final UUID recivier;
-    private final UUID sender;
-    private final UUID recivierAccount;
-    private final UUID senderAccount;
-    private final Money amount;
+    private UUID requestId;
+    private UUID id;
+    private UUID recivier;
+    private UUID sender;
+    private UUID recivierAccount;
+    private UUID senderAccount;
+    @Embedded
+    private Money amount;
 
     public Transaction(UUID requestId, UUID sender, UUID recivier, UUID senderAccount, UUID recivierAccount, Money amount) {
         NullHelper.throwIfNull(requestId, "requestId");
@@ -26,6 +31,16 @@ public class Transaction {
         this.recivierAccount = recivierAccount;
         this.senderAccount = senderAccount;
         this.amount = amount;
+    }
+
+    public Transaction(Transaction other) {
+        requestId = other.requestId();
+        id = other.id();
+        recivier = other.recivier();
+        sender = other.sender();
+        recivierAccount = other.recivierAccount();
+        senderAccount = other.senderAccount();
+        amount = Money.copy(other.amount());
     }
 
     public UUID requestId() {

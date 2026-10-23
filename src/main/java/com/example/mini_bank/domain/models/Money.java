@@ -6,6 +6,9 @@ import java.util.Objects;
 import com.example.mini_bank.domain.exceptions.IncompatibleCurrencies;
 import com.example.mini_bank.domain.exceptions.NullHelper;
 
+import jakarta.persistence.Embeddable;
+
+@Embeddable
 public record Money(BigDecimal amount, Currency currency) {
 
     public Money {

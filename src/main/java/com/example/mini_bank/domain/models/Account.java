@@ -7,11 +7,16 @@ import java.util.UUID;
 import com.example.mini_bank.domain.exceptions.InsufficientFunds;
 import com.example.mini_bank.domain.exceptions.NullHelper;
 
+import jakarta.persistence.Embeddable;
+import jakarta.persistence.Embedded;
+
+@Embeddable
 public class Account {
-    private final UUID id;
-    private final UUID userId;
-    private final Instant createdAt;
-    private final String number;
+    private UUID id;
+    private UUID userId;
+    private Instant createdAt;
+    private String number;
+    @Embedded
     private Money balance;
 
     private static String randomNumber() {
@@ -46,6 +51,8 @@ public class Account {
         number = other.number();
         balance = other.balance();
     }
+
+    protected Account() { }
 
     public UUID id() {
         return id;

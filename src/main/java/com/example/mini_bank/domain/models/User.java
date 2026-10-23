@@ -4,11 +4,14 @@ import java.util.UUID;
 
 import com.example.mini_bank.domain.exceptions.NullHelper;
 
+import jakarta.persistence.Embeddable;
+
+@Embeddable
 public class User {
-    private final UUID id;
-    private final Instant createdAt;
-    private final String email;
-    private final String password;
+    private UUID id;
+    private Instant createdAt;
+    private String email;
+    private String password;
 
     public User(String email, String password) {
         NullHelper.throwIfNull(email, "email");
@@ -19,6 +22,13 @@ public class User {
 
         this.email = email;
         this.password = password;
+    }
+
+    public User(User other) {
+        id = other.id();
+        createdAt = other.createdAt();
+        email = other.email();
+        password = other.password();
     }
 
     public UUID id() {
